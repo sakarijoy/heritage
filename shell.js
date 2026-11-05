@@ -13,7 +13,7 @@ $('#app-navigation').onclick=e=>{const button=e.target.closest('[data-app-page]'
 $('#visit-regions').onclick=e=>{const button=e.target.closest('[data-visit-region]');if(!button)return;visitRegion=button.dataset.visitRegion;selectedVisitProvince=null;renderVisits()};
 $('#visit-status').onchange=()=>{visitStatus=$('#visit-status').value;renderVisits()};
 function showLocalHeritage(key){
- const place=VisitDetails.place(key);if(!place)return;
+ const place=VisitDetails.place(key);if(!place||!VisitDetails.hasHeritage(key))return;
  region=Object.keys(regions).find(r=>regions[r].includes(place.province))||'全部';syncProvinceOptions();$('#province').value=place.province;syncRegionButtons();
  heritageCity=place.city;mode='all';$('#search').value='';$('#type').value='';currentPage=1;
  document.querySelectorAll('.tab').forEach(button=>button.classList.toggle('active',button.dataset.mode==='all'));
@@ -31,7 +31,7 @@ $('#visit-dates-list').onclick=e=>{const button=e.target.closest('[data-remove-v
 function visitEditorDirty(){return $('#visit-dialog').open&&(JSON.stringify(visitEditorValue())!==visitEditorOriginal||(typeof hasPendingVisitPhotos==='function'&&hasPendingVisitPhotos()))}
 function openVisitEditor(key,tab='record'){
  const place=VisitDetails.place(key);if(!place)return;
- visitEditorKey=key;const details=state.visitDetails[key]||{date:'',note:''};
+ visitEditorKey=key;$('#visit-editor-heritage').hidden=!VisitDetails.hasHeritage(key);const details=state.visitDetails[key]||{date:'',note:''};
  $('#visit-editor-title').textContent=place.name;
  const visited=(place.city?state.subdivisions[key]:state.provinces[key])===true;
  $('#visit-editor-status').textContent=(place.city?place.province+' · ':'')+(visited?'已勾选到访':'尚未勾选到访');
