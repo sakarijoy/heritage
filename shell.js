@@ -2,15 +2,15 @@ let activeAppPage='heritage';
 const appPageScroll={visits:0,heritage:0};
 function showAppPage(page,{top=false}={}){
  if(!['visits','heritage'].includes(page))return;
- appPageScroll[activeAppPage]=window.scrollY;
+ const content=$('main');appPageScroll[activeAppPage]=content.scrollTop;
  activeAppPage=page;
  for(const name of ['visits','heritage'])$('#'+name+'-page').hidden=name!==page;
  document.querySelectorAll('[data-app-page]').forEach(button=>{if(button.dataset.appPage===page)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});
  document.title=(page==='visits'?'省市足迹':'遗产探索')+' · 山河足迹';
- window.scrollTo({top:top?0:appPageScroll[page],behavior:'instant'});
+ content.scrollTo({top:top?0:appPageScroll[page],behavior:'instant'});
 }
 $('#app-navigation').onclick=e=>{const button=e.target.closest('[data-app-page]');if(button)showAppPage(button.dataset.appPage)};
-$('#visit-regions').onclick=e=>{const button=e.target.closest('[data-visit-region]');if(!button)return;visitRegion=button.dataset.visitRegion;renderVisits()};
+$('#visit-regions').onclick=e=>{const button=e.target.closest('[data-visit-region]');if(!button)return;visitRegion=button.dataset.visitRegion;selectedVisitProvince=null;renderVisits()};
 $('#visit-status').onchange=()=>{visitStatus=$('#visit-status').value;renderVisits()};
 function showLocalHeritage(key){
  const place=VisitDetails.place(key);if(!place)return;
@@ -35,7 +35,7 @@ $('#provinces').addEventListener('click',e=>{
  const photos=e.target.closest('[data-visit-photos]');if(photos){openVisitEditor(photos.dataset.visitPhotos,'album');return}
  const edit=e.target.closest('[data-edit-visit]');if(edit){openVisitEditor(edit.dataset.editVisit);return}
  const heritage=e.target.closest('[data-visit-heritage]');if(heritage){showLocalHeritage(heritage.dataset.visitHeritage);return}
- const expand=e.target.closest('[data-expand-visits]');if(expand){const province=expand.dataset.expandVisits;if(expandedVisitProvinces.has(province))expandedVisitProvinces.delete(province);else expandedVisitProvinces.add(province);renderVisits();$('#provinces').querySelector('[data-expand-visits="'+province+'"]')?.focus({preventScroll:true})}
+ const select=e.target.closest('[data-select-province]');if(select){const province=select.dataset.selectProvince;selectedVisitProvince=selectedVisitProvince===province?null:province;renderVisits();$('#provinces').querySelector('[data-select-province="'+province+'"]')?.focus({preventScroll:true})}
 });
 $('#visit-editor-close').onclick=()=>{if(typeof canCloseVisitAlbum==='function'&&!canCloseVisitAlbum())return;$('#visit-dialog').close()};
 $('#visit-dialog').addEventListener('close',()=>{$('#provinces').querySelector('[data-edit-visit="'+visitEditorKey+'"]')?.focus({preventScroll:true})});

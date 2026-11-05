@@ -1,6 +1,6 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>遗产探索 · 山河足迹</title><meta name="theme-color" content="#263d36"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="山河足迹"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icons-apple-touch-icon.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="photos.css"><link rel="stylesheet" href="journal.css"><link rel="stylesheet" href="mobile.css"><link rel="stylesheet" href="responsive.css"><link rel="stylesheet" href="shell.css"><link rel="stylesheet" href="visit-photos.css"><body>
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>遗产探索 · 山河足迹</title><meta name="theme-color" content="#263d36"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="山河足迹"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icons-apple-touch-icon.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="photos.css"><link rel="stylesheet" href="journal.css"><link rel="stylesheet" href="mobile.css"><link rel="stylesheet" href="responsive.css"><link rel="stylesheet" href="shell.css"><link rel="stylesheet" href="visit-photos.css"><link rel="stylesheet" href="app-frame.css"><body>
 <header><a class="brand" href="./">◈ 山河足迹</a><span>我的旅行手账</span><details id="app-more"><summary aria-label="更多功能">更多 ···</summary><div class="more-menu"><button id="export" type="button">备份</button><label class="import">恢复<input id="import" type="file" accept="application/json" hidden></label><button id="install-help" type="button">使用说明</button></div></details></header>
-<main>
+<main id="app-content" tabindex="-1">
 <section id="heritage-page" class="app-page" aria-labelledby="heritage-title">
 <div class="page-heading"><span class="eyebrow">WORLD HERITAGE</span><h1 id="heritage-title">遗产探索</h1><p>把想去的地方，慢慢变成去过的地方。</p></div>
 <div class="stats" id="stats"></div>
@@ -17,7 +17,7 @@
 <section class="visit-browser" aria-label="省市到访记录">
 <h2 class="section-label">按地区查看</h2><div id="visit-regions" class="region-picker" role="group" aria-label="到访记录地区"></div>
 <div class="visit-filter-row"><label for="visit-status">到访状态</label><select id="visit-status"><option value="all">全部记录</option><option value="visited">已到访</option><option value="unvisited">未到访</option></select></div>
-<p class="visit-instruction">勾选记录到访，点击名称记录日期、备注和照片。省份与下级分别记录。</p>
+<p class="visit-instruction">点省名展开详情；勾选记录到访。省份与下级分别计数。</p>
 <div id="provinces"></div>
 </section></section>
 <footer>资料来源：<a href="https://whc.unesco.org/en/statesparties/cn" target="_blank" rel="noopener">UNESCO 世界遗产中心 ↗</a> · 记录仅存本机，请定期备份。</footer>
