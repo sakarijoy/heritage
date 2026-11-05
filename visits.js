@@ -17,7 +17,7 @@ function visitSummaryMarkup(){
  return `<div class="visit-summary-scope"><span>${esc(scope)} · 到访统计</span><span>按勾选计数</span></div><div class="visit-metrics">${metric('已访省份',local.provincesVisited,local.provincesTotal,'provinces')}${metric('已访下级',local.subdivisionsVisited,local.subdivisionsTotal,'subdivisions')}</div>${visitRegion!=='全部'?`<p class="visit-total-note">全国累计 <b>${all.provincesVisited}</b> / ${all.provincesTotal} 省级地区 · <b>${all.subdivisionsVisited}</b> / ${all.subdivisionsTotal} 下级地区</p>`:''}<p class="visit-count-note">省份与下级分别勾选、分别计数。下级含城市、自治州及区县等。</p>`;
 }
 function visitMatches(checked){return visitStatus==='all'||(visitStatus==='visited'?checked:!checked)}
-function visitNoteMarkup(key){const details=state.visitDetails[key];return details&&(details.date||details.note)?`<p class="visit-note-preview">${details.date?`<time>${esc(details.date)}</time>`:''}${details.note?`<span>${esc(details.note)}</span>`:''}</p>`:''}
+function visitNoteMarkup(key){const details=state.visitDetails[key],dates=VisitDetails.dates(details),latest=dates[dates.length-1];return details&&(latest||details.note)?`<p class="visit-note-preview">${latest?`<time>${esc(latest)}</time>${dates.length>1?`<span>共 ${dates.length} 个到访日期</span>`:''}`:''}${details.note?`<span>${esc(details.note)}</span>`:''}</p>`:''}
 function provinceVisitsMarkup(){
  const visible=visibleVisitProvinces().filter(province=>visitMatches(state.provinces[province]===true)||(DIVISIONS[province]||[]).some(name=>visitMatches(state.subdivisions[province+'|'+name]===true)));
  if(!visible.length)return '<div class="empty">当前地区没有符合条件的到访记录。</div>';
