@@ -55,6 +55,22 @@ $('#visit-editor-form').onsubmit=e=>{
 };
 $('#visit-editor-heritage').onclick=()=>{if(visitEditorDirty()){toast('请先保存当前日期和备注，再查看遗产');return}const key=visitEditorKey;$('#visit-dialog').close();showLocalHeritage(key)};
 document.addEventListener('click',e=>{if(e.target.closest('#app-more button'))$('#app-more').open=false});
-// Heritage exploration is the home page, including direct destination links.
-showAppPage('heritage',{top:true});
+// Keep only view settings in session storage while the app automatically reloads.
+function preserveAppView(){try{const scroll={...appPageScroll,[activeAppPage]:$('main').scrollTop};sessionStorage.setItem('shanhe-update-view',JSON.stringify({page:activeAppPage,scroll,mode,region,province:$('#province').value,search:$('#search').value,type:$('#type').value,heritageCity,currentPage,pageSize,visitRegion,visitStatus,selectedVisitProvince}))}catch{}}
+function restoreAppView(){try{
+ const raw=sessionStorage.getItem('shanhe-update-view');sessionStorage.removeItem('shanhe-update-view');if(!raw)return;
+ const view=JSON.parse(raw);if(!view||!['heritage','visits'].includes(view.page))return;
+ region=view.region==='全部'||Object.hasOwn(regions,view.region)?view.region:'全部';syncProvinceOptions();$('#province').value=provinces.includes(view.province)?view.province:'';syncRegionButtons();
+ mode=['all','todo','done'].includes(view.mode)?view.mode:'all';document.querySelectorAll('.tab').forEach(button=>button.classList.toggle('active',button.dataset.mode===mode));
+ $('#search').value=typeof view.search==='string'?view.search:'';$('#type').value=['','文化遗产','自然遗产','双重遗产'].includes(view.type)?view.type:'';
+ heritageCity=(DIVISIONS[$('#province').value]||[]).includes(view.heritageCity)?view.heritageCity:'';
+ pageSize=[8,16,32].includes(view.pageSize)?view.pageSize:8;$('#page-size').value=String(pageSize);
+ visitRegion=view.visitRegion==='全部'||Object.hasOwn(regions,view.visitRegion)?view.visitRegion:'全部';visitStatus=['all','visited','unvisited'].includes(view.visitStatus)?view.visitStatus:'all';$('#visit-status').value=visitStatus;
+ selectedVisitProvince=provinces.includes(view.selectedVisitProvince)?view.selectedVisitProvince:null;
+ render();currentPage=Number.isSafeInteger(view.currentPage)&&view.currentPage>0?view.currentPage:1;render();showAppPage(view.page,{top:true});
+ for(const name of ['heritage','visits'])appPageScroll[name]=Number.isFinite(view.scroll?.[name])&&view.scroll[name]>0?view.scroll[name]:0;
+ $('main').scrollTo({top:appPageScroll[view.page],behavior:'instant'});
+}catch{}}
+// Heritage exploration is the default home page; automatic updates restore the view.
+showAppPage('heritage',{top:true});restoreAppView();
 window.addEventListener('hashchange',()=>{if(location.hash.startsWith('#site=')&&activeAppPage!=='heritage')showAppPage('heritage',{top:true})});
