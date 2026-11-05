@@ -1,16 +1,7 @@
-<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>山河足迹 · 我的旅行足迹</title><meta name="theme-color" content="#263d36"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="山河足迹"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icons-apple-touch-icon.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="photos.css"><link rel="stylesheet" href="journal.css"><link rel="stylesheet" href="mobile.css"><link rel="stylesheet" href="responsive.css"><link rel="stylesheet" href="shell.css"><body>
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>遗产探索 · 山河足迹</title><meta name="theme-color" content="#263d36"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="山河足迹"><link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="icons-apple-touch-icon.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="photos.css"><link rel="stylesheet" href="journal.css"><link rel="stylesheet" href="mobile.css"><link rel="stylesheet" href="responsive.css"><link rel="stylesheet" href="shell.css"><body>
 <header><a class="brand" href="./">◈ 山河足迹</a><span>我的旅行手账</span><details id="app-more"><summary aria-label="更多功能">更多 ···</summary><div class="more-menu"><button id="export" type="button">备份</button><label class="import">恢复<input id="import" type="file" accept="application/json" hidden></label><button id="install-help" type="button">使用说明</button></div></details></header>
 <main>
-<section id="visits-page" class="app-page" aria-labelledby="visits-title">
-<div class="page-heading"><span class="eyebrow">MY FOOTPRINTS</span><h1 id="visits-title">省市足迹</h1><p>每一次抵达，都值得记下来。</p></div>
-<div id="visit-summary" class="visit-summary" role="status" aria-live="polite" aria-atomic="true"></div>
-<section class="visit-browser" aria-label="省市到访记录">
-<h2 class="section-label">按地区查看</h2><div id="visit-regions" class="region-picker" role="group" aria-label="到访记录地区"></div>
-<div class="visit-filter-row"><label for="visit-status">到访状态</label><select id="visit-status"><option value="all">全部记录</option><option value="visited">已到访</option><option value="unvisited">未到访</option></select></div>
-<p class="visit-instruction">勾选记录到访，点击名称填写日期和备注。省份与下级分别记录。</p>
-<div id="provinces"></div>
-</section></section>
-<section id="heritage-page" class="app-page" aria-labelledby="heritage-title" hidden>
+<section id="heritage-page" class="app-page" aria-labelledby="heritage-title">
 <div class="page-heading"><span class="eyebrow">WORLD HERITAGE</span><h1 id="heritage-title">遗产探索</h1><p>把想去的地方，慢慢变成去过的地方。</p></div>
 <div class="stats" id="stats"></div>
 <section class="heritage-browser" aria-label="世界遗产查询"><div id="regions" class="region-picker" role="group" aria-label="遗产地区"></div>
@@ -20,9 +11,18 @@
 <div class="result-head"><span id="count"></span><span>名录项目与子地点分别记录</span></div>
 <div id="result-start" class="result-toolbar" tabindex="-1"><span id="page-range" role="status" aria-live="polite"></span><label for="page-size">每页 <select id="page-size" aria-label="每页遗产数量"><option value="8">8 个</option><option value="16">16 个</option><option value="32">32 个</option></select></label></div><div id="results"></div><div id="pagination" class="result-pagination" role="navigation" aria-label="遗产列表分页" hidden></div>
 </article></section></section>
+<section id="visits-page" class="app-page" aria-labelledby="visits-title" hidden>
+<div class="page-heading"><span class="eyebrow">MY FOOTPRINTS</span><h1 id="visits-title">省市足迹</h1><p>每一次抵达，都值得记下来。</p></div>
+<div id="visit-summary" class="visit-summary" role="status" aria-live="polite" aria-atomic="true"></div>
+<section class="visit-browser" aria-label="省市到访记录">
+<h2 class="section-label">按地区查看</h2><div id="visit-regions" class="region-picker" role="group" aria-label="到访记录地区"></div>
+<div class="visit-filter-row"><label for="visit-status">到访状态</label><select id="visit-status"><option value="all">全部记录</option><option value="visited">已到访</option><option value="unvisited">未到访</option></select></div>
+<p class="visit-instruction">勾选记录到访，点击名称填写日期和备注。省份与下级分别记录。</p>
+<div id="provinces"></div>
+</section></section>
 <footer>资料来源：<a href="https://whc.unesco.org/en/statesparties/cn" target="_blank" rel="noopener">UNESCO 世界遗产中心 ↗</a> · 记录仅存本机，请定期备份。</footer>
 </main>
-<nav id="app-navigation" class="app-navigation" aria-label="主导航"><button type="button" data-app-page="visits" aria-controls="visits-page" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15m6-12v15"/></svg><span>省市足迹</span></button><button type="button" data-app-page="heritage" aria-controls="heritage-page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m3 8 9-5 9 5M3 21h18M5 9h14M6 10v8m6-8v8m6-8v8M4 18h16"/></svg><span>遗产探索</span></button></nav>
+<nav id="app-navigation" class="app-navigation" aria-label="主导航"><button type="button" data-app-page="heritage" aria-controls="heritage-page" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m3 8 9-5 9 5M3 21h18M5 9h14M6 10v8m6-8v8m6-8v8M4 18h16"/></svg><span>遗产探索</span></button><button type="button" data-app-page="visits" aria-controls="visits-page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"/><path d="M9 3v15m6-12v15"/></svg><span>省市足迹</span></button></nav>
 <div id="toast" role="status"></div>
 <dialog id="visit-dialog" aria-labelledby="visit-editor-title"><div class="visit-editor-top"><span>省市到访记录</span><button id="visit-editor-close" type="button" aria-label="关闭到访记录">✕</button></div><form id="visit-editor-form"><h2 id="visit-editor-title"></h2><p id="visit-editor-status"></p><label for="visit-date">到访日期 <span>选填，可记录最近一次到访</span></label><input id="visit-date" type="date"><label for="visit-note">简短备注 <span>选填，最多500字</span></label><textarea id="visit-note" maxlength="500" rows="5" placeholder="例如：国庆自驾，沿江散步的一天。"></textarea><p class="visit-editor-help">保存日期和备注不会改变到访勾选状态。取消勾选也会保留这些内容。</p><div class="visit-editor-actions"><button id="visit-editor-heritage" type="button">查看当地遗产 ↗</button><button class="primary" type="submit">保存记录</button></div></form></dialog>
 <dialog id="photo-dialog" aria-labelledby="photo-title"><button id="photo-close" aria-label="关闭大图">✕</button><img id="photo-full" alt=""><div class="photo-detail"><div id="photo-caption"></div><h2 id="photo-title"></h2><p id="photo-intro"></p><a id="photo-credit" target="_blank" rel="noopener"></a><div id="photo-cover-tools"></div><p class="photo-note">照片展示遗产的代表性地点，系列遗产不代表所有组成部分。</p></div></dialog><script src="data.js"></script><script src="intros.js"></script><script src="photos.js"></script><script src="divisions.js"></script><script src="visit-model.js"></script><script src="visits.js"></script><script src="app.js"></script><script src="mobile-store.js"></script><script src="journal.js"></script><script src="mobile.js"></script><script src="covers.js"></script><script src="shell.js"></script></body></html>

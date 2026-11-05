@@ -1,4 +1,4 @@
-let activeAppPage='visits';
+let activeAppPage='heritage';
 const appPageScroll={visits:0,heritage:0};
 function showAppPage(page,{top=false}={}){
  if(!['visits','heritage'].includes(page))return;
@@ -48,6 +48,6 @@ $('#visit-editor-form').onsubmit=e=>{
 };
 $('#visit-editor-heritage').onclick=()=>{if(visitEditorDirty()){toast('请先保存当前日期和备注，再查看遗产');return}const key=visitEditorKey;$('#visit-dialog').close();showLocalHeritage(key)};
 document.addEventListener('click',e=>{if(e.target.closest('#app-more button'))$('#app-more').open=false});
-// A direct destination link opens the heritage page; normal launches start on visits.
-if(location.hash.startsWith('#site='))showAppPage('heritage',{top:true});
+// Heritage exploration is the home page, including direct destination links.
+showAppPage('heritage',{top:true});
 window.addEventListener('hashchange',()=>{if(location.hash.startsWith('#site=')&&activeAppPage!=='heritage')showAppPage('heritage',{top:true})});
