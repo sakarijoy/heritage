@@ -25,7 +25,6 @@ function showLocalHeritage(key){
  const place=VisitDetails.place(key);if(!place||!VisitDetails.hasHeritage(key))return;
  region=Object.keys(regions).find(r=>regions[r].includes(place.province))||'全部';syncProvinceOptions();$('#province').value=place.province;syncRegionButtons();
  heritageCity=place.city;mode='all';$('#search').value='';$('#type').value='';currentPage=1;
- document.querySelectorAll('.tab').forEach(button=>button.classList.toggle('active',button.dataset.mode==='all'));
  render();showAppPage('heritage',{top:true});
 }
 $('#clear-location').onclick=()=>{heritageCity='';render()};
@@ -152,7 +151,7 @@ function restoreAppView(){try{
  const raw=sessionStorage.getItem('shanhe-update-view');sessionStorage.removeItem('shanhe-update-view');if(!raw)return;
  const view=JSON.parse(raw);if(!view||!['heritage','visits'].includes(view.page))return;
  region=view.region==='全部'||Object.hasOwn(regions,view.region)?view.region:'全部';syncProvinceOptions();$('#province').value=provinces.includes(view.province)?view.province:'';syncRegionButtons();
- mode=['all','todo','done'].includes(view.mode)?view.mode:'all';document.querySelectorAll('.tab').forEach(button=>button.classList.toggle('active',button.dataset.mode===mode));
+ mode=['all','todo','done'].includes(view.mode)?view.mode:'all';
  $('#search').value=typeof view.search==='string'?view.search:'';$('#type').value=['','文化遗产','自然遗产','双重遗产'].includes(view.type)?view.type:'';
  heritageCity=(DIVISIONS[$('#province').value]||[]).includes(view.heritageCity)?view.heritageCity:'';
  pageSize=[8,16,32].includes(view.pageSize)?view.pageSize:8;$('#page-size').value=String(pageSize);

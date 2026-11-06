@@ -3,7 +3,11 @@
 <main id="app-content" tabindex="-1">
 <section id="heritage-page" class="app-page" aria-labelledby="heritage-title">
 <div class="page-heading"><span class="eyebrow">WORLD HERITAGE</span><h1 id="heritage-title">遗产探索</h1><p>把想去的地方，慢慢变成去过的地方。</p></div>
-<div class="stats" id="stats"></div>
+<div class="stats" id="stats" role="group" aria-label="遗产记录总览">
+<button class="stat" type="button" data-overview-mode="all" aria-controls="results"><b id="stat-count-all"></b><span>世界遗产项目</span></button>
+<button class="stat" type="button" data-overview-mode="done" aria-controls="results"><b id="stat-count-done"></b><span>已打卡项目</span></button>
+<button class="stat" type="button" data-overview-mode="todo" aria-controls="results"><b id="stat-count-todo"></b><span>想去目的地</span></button>
+</div>
 <section class="heritage-browser" aria-label="世界遗产查询"><div id="regions" class="region-picker" role="group" aria-label="遗产地区"></div>
 <article><nav id="heritage-modes" aria-label="遗产记录类型"><button class="tab active" data-mode="all">全部遗产</button><button class="tab" data-mode="todo">想去</button><button class="tab" data-mode="done">已打卡</button></nav>
 <div id="filters"><input id="search" placeholder="搜索遗产、省份或城市…" aria-label="搜索"><select id="type" aria-label="遗产类型"><option value="">全部类型</option><option>文化遗产</option><option>自然遗产</option><option>双重遗产</option></select><select id="province" aria-label="省份"><option value="">全部省份</option></select></div>

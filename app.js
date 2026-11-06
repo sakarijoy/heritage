@@ -17,7 +17,28 @@ syncProvinceOptions();
 $('#regions').innerHTML=['全部',...Object.keys(regions)].map(r=>`<button class="${r==='全部'?'active':''}" data-region="${r}">${r==='全部'?'全部地区':r}</button>`).join('');
 syncRegionButtons();
 $('#regions').onclick=e=>{if(!e.target.dataset.region)return;region=e.target.dataset.region;heritageCity='';$('#province').value='';syncProvinceOptions();syncRegionButtons();render()};
-$('#heritage-modes').onclick=e=>{if(!e.target.dataset.mode)return;mode=e.target.dataset.mode;document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.mode===mode));render()};
+function selectHeritageMode(next,fromOverview=false){
+ if(!['all','done','todo'].includes(next))return;
+ mode=next;
+ if(fromOverview){
+  region='全部';
+  heritageCity='';
+  $('#province').value='';
+  $('#search').value='';
+  $('#type').value='';
+  currentPage=1;
+  syncProvinceOptions();
+  syncRegionButtons();
+ }
+ render();
+ if(fromOverview){
+  const tab=$('#heritage-modes [data-mode="'+mode+'"]');
+  tab.focus({preventScroll:true});
+  tab.scrollIntoView({block:'start'});
+ }
+}
+$('#heritage-modes').onclick=e=>selectHeritageMode(e.target.closest('[data-mode]')?.dataset.mode);
+$('#stats').onclick=e=>selectHeritageMode(e.target.closest('[data-overview-mode]')?.dataset.overviewMode,true);
 $('#search').oninput=render;$('#type').onchange=render;$('#province').onchange=()=>{heritageCity='';const province=$('#province').value;if(province)region=Object.keys(regions).find(r=>regions[r].includes(province))||'全部';syncProvinceOptions();syncRegionButtons();render()};
 $('#provinces').onchange=e=>{if(e.target.dataset.subdivision)state.subdivisions[e.target.dataset.subdivision]=e.target.checked;else if(e.target.dataset.province)state.provinces[e.target.dataset.province]=e.target.checked;else return;save()};
 function paginationMarkup(totalPages){
@@ -34,7 +55,17 @@ function photoCard(x){const p=displayPhoto(x.id);if(!p)return '';return '<figure
 function openPhoto(id){const x=DATA.items.find(x=>x.id===id),p=displayPhoto(id);if(!x||!p)return;photoCoverSite=id;const dialog=$('#photo-dialog');$('#photo-title').textContent=x.name;$('#photo-full').src=p.url;$('#photo-full').alt=p.caption||x.name;$('#photo-caption').textContent=p.caption||x.name;$('#photo-intro').textContent=INTROS[id]||'';$('#photo-credit').textContent=p.custom?'我的封面照片 ↗':'图片来源：'+(p.credit||'UNESCO 世界遗产中心');$('#photo-credit').href=p.source||p.url;$('#photo-dialog .photo-note').textContent=p.custom?'自定义展示图仅保存在当前设备，随完整备份导出。':'照片展示遗产的代表性地点，系列遗产不代表所有组成部分。';$('#photo-cover-tools').innerHTML=coverTools(id);if(!dialog.open)dialog.showModal()}
 $('#photo-close').onclick=()=>$('#photo-dialog').close();$('#photo-dialog').onclick=e=>{if(e.target===$('#photo-dialog'))$('#photo-dialog').close()};
 $('#results').addEventListener('error',e=>{if(e.target.tagName==='IMG'){e.target.hidden=true;const fallback=e.target.parentElement.querySelector('.photo-unavailable');if(fallback)fallback.hidden=false}},true);
-function render(){renderVisits();const items=DATA.items;$('#stats').innerHTML=[[items.length,'世界遗产项目'],[items.filter(x=>state.done[x.id]).length,'已打卡项目'],[items.filter(x=>state.todo[x.id]).length,'想去目的地']].map(([n,t])=>`<div class="stat"><b>${n}</b><span>${t}</span></div>`).join('');
+function render(){
+ renderVisits();
+ const items=DATA.items;
+ const counts={all:items.length,done:items.filter(x=>state.done[x.id]).length,todo:items.filter(x=>state.todo[x.id]).length};
+ for(const [name,count] of Object.entries(counts))$('#stat-count-'+name).textContent=String(count);
+ document.querySelectorAll('[data-overview-mode]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.overviewMode===mode)));
+ document.querySelectorAll('#heritage-modes [data-mode]').forEach(button=>{
+  const active=button.dataset.mode===mode;
+  button.classList.toggle('active',active);
+  button.setAttribute('aria-pressed',String(active));
+ });
 const q=$('#search').value.trim().toLowerCase(),p=$('#province').value,t=$('#type').value;const list=items.filter(x=>(!q||JSON.stringify([x.name,x.provinces,x.cities,x.components,x.aliases]).toLowerCase().includes(q))&&(!p||x.provinces.includes(p))&&(!heritageCity||x.cities?.includes(heritageCity))&&(!t||x.type===t)&&(region==='全部'||x.provinces.some(v=>regions[region].includes(v)))&&(mode!=='done'||state.done[x.id])&&(mode!=='todo'||state.todo[x.id]));const filterKey=JSON.stringify([q,p,t,region,mode,heritageCity]);if(filterKey!==lastFilterKey){currentPage=1;lastFilterKey=filterKey}
 const totalPages=Math.max(1,Math.ceil(list.length/pageSize));currentPage=Math.max(1,Math.min(currentPage,totalPages));
 const start=(currentPage-1)*pageSize,pageItems=list.slice(start,start+pageSize);

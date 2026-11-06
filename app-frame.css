@@ -20,3 +20,9 @@
 }
 
 [data-unsaved]{outline:2px solid #a86620!important;outline-offset:3px;scroll-margin-block:16px}
+
+#stats .stat {min-width:0;border:1px solid #d7dece}
+#stats .stat:hover {border-color:#8ba487}
+#stats .stat[aria-pressed=true] {background:#e4eddc;border-color:#8ba487;color:#355b41}
+#stats .stat:focus-visible {outline:2px solid #446647;outline-offset:2px}
+#heritage-modes [data-mode] {scroll-margin-top:12px}
