@@ -4,8 +4,7 @@ function showAppPage(page,{top=false}={}){
  if(!['visits','heritage'].includes(page))return;
  const content=$('main');
  if(isVisitEditorOpen()){
-  if(typeof canCloseVisitAlbum==='function'&&!canCloseVisitAlbum())return false;
-  if(visitEditorDirty()){toast('请先保存到访日期与备注');return false}
+  if(!canLeaveVisitEditor())return false;
   $('#visit-detail-page').hidden=true;
   visitEditorKey=null;
  }else if(typeof isTravelPageOpen==='function'&&isTravelPageOpen()){
@@ -55,8 +54,14 @@ $('#visit-date-add').onclick=()=>{
  visitEditorDates.push(date);
  visitEditorDates.sort();
  if(note)visitEditorDateNotes[date]=note;
+ const marked=$('#visit-date').hasAttribute('data-unsaved')||$('#visit-date-note').hasAttribute('data-unsaved');
  clearPendingVisitDate();
  renderVisitDates();
+ if(marked){
+  $('#visit-date').removeAttribute('data-unsaved');
+  $('#visit-date-note').removeAttribute('data-unsaved');
+  $('#visit-dates-list').setAttribute('data-unsaved','');
+ }
 };
 $('#visit-dates-list').onclick=e=>{
  const button=e.target.closest('[data-remove-visit-date]');if(!button)return;
@@ -66,13 +71,39 @@ $('#visit-dates-list').onclick=e=>{
  if($('#visit-date').value===date)clearPendingVisitDate();
  renderVisitDates();
 };
-function visitEditorDirty(){
- if(!isVisitEditorOpen())return false;
- return !!$('#visit-date-note').value.trim()||JSON.stringify(visitEditorValue())!==visitEditorOriginal||(typeof hasPendingVisitPhotos==='function'&&hasPendingVisitPhotos());
+function clearUnsavedFields(scope=''){
+ for(const field of document.querySelectorAll(`${scope} [data-unsaved]`.trim()))field.removeAttribute('data-unsaved');
+}
+function highlightUnsavedFields(selectors){
+ clearUnsavedFields();
+ const fields=selectors.map(selector=>$(selector)).filter(Boolean);
+ fields.forEach(field=>field.setAttribute('data-unsaved',''));
+ fields[0]?.scrollIntoView({block:'center',inline:'nearest'});
+}
+function visitRecordChanges(){
+ const original=JSON.parse(visitEditorOriginal);
+ const staged=VisitDetails.normalize({dates:visitEditorDates,dateNotes:visitEditorDateNotes,note:$('#visit-note').value});
+ const pendingNote=$('#visit-date-note').value.trim(),pendingDate=$('#visit-date').value;
+ const changes=[];
+ if(JSON.stringify(staged.dates)!==JSON.stringify(original.dates)||JSON.stringify(staged.dateNotes)!==JSON.stringify(original.dateNotes))changes.push(['#visit-dates-list','到访日期列表']);
+ if(pendingDate&&!visitEditorDates.includes(pendingDate)||pendingNote)changes.push(['#visit-date','新增到访日期']);
+ if(pendingNote)changes.push(['#visit-date-note','本次到访备注']);
+ if(staged.note!==original.note)changes.push(['#visit-note','地点备注']);
+ return changes;
+}
+function canLeaveVisitEditor(){
+ if(typeof canCloseVisitAlbum==='function'&&!canCloseVisitAlbum())return false;
+ const changes=visitRecordChanges();
+ if(!changes.length)return true;
+ if(typeof switchVisitEditorTab==='function')switchVisitEditorTab('record');
+ highlightUnsavedFields(changes.map(([selector])=>selector));
+ toast('请保存'+changes.map(([,label])=>label).join('、'));
+ return false;
 }
 function openVisitEditor(key,tab='record'){
  const place=VisitDetails.place(key);if(!place)return;
- if(isVisitEditorOpen()&&visitEditorDirty())return;
+ if(isVisitEditorOpen()&&!canLeaveVisitEditor())return;
+ clearUnsavedFields();
  if(!isVisitEditorOpen())appPageScroll[activeAppPage]=$('main').scrollTop;
  visitEditorKey=key;$('#visit-editor-heritage').hidden=!VisitDetails.hasHeritage(key);const details=state.visitDetails[key]||{date:'',note:''};
  $('#visit-editor-title').textContent=place.name;
@@ -105,15 +136,15 @@ $('#visit-editor-close').onclick=()=>{
 $('#visit-editor-form').onsubmit=e=>{
  e.preventDefault();if(!visitEditorKey)return;
  const pendingNote=$('#visit-date-note').value.trim(),pendingDate=$('#visit-date').value;
- if(pendingNote&&!pendingDate){toast('请为本次到访备注选择日期');return}
- if(pendingNote&&visitEditorDates.includes(pendingDate)){toast('这个日期已添加，请选择其他日期');return}
+ if(pendingNote&&!pendingDate){highlightUnsavedFields(['#visit-date','#visit-date-note']);toast('请为本次到访备注选择日期');return}
+ if(pendingNote&&visitEditorDates.includes(pendingDate)){highlightUnsavedFields(['#visit-date','#visit-date-note']);toast('这个日期已添加，请选择其他日期');return}
  const details=visitEditorValue();details.note=details.note.trim();
  if(!VisitDetails.valid({[visitEditorKey]:details})){toast('请填写有效的到访日期，备注最多500字');return}
  const previous=state.visitDetails[visitEditorKey];state.visitDetails[visitEditorKey]=details;
  if(!save()){if(previous)state.visitDetails[visitEditorKey]=previous;else delete state.visitDetails[visitEditorKey];renderVisits();return}
- visitEditorDates=[...details.dates];visitEditorDateNotes={...details.dateNotes};clearPendingVisitDate();$('#visit-note').value=details.note;renderVisitDates();visitEditorOriginal=JSON.stringify(visitEditorValue());invalidateBackup();toast('全部到访日期与备注已保存');
+ visitEditorDates=[...details.dates];visitEditorDateNotes={...details.dateNotes};clearPendingVisitDate();$('#visit-note').value=details.note;renderVisitDates();visitEditorOriginal=JSON.stringify(visitEditorValue());clearUnsavedFields('#visit-editor-form');invalidateBackup();toast('全部到访日期与备注已保存');
 };
-$('#visit-editor-heritage').onclick=()=>{if(visitEditorDirty()){toast('请先保存当前日期和备注，再查看遗产');return}showLocalHeritage(visitEditorKey)};
+$('#visit-editor-heritage').onclick=()=>{if(canLeaveVisitEditor())showLocalHeritage(visitEditorKey)};
 document.addEventListener('click',e=>{if(e.target.closest('#app-more button'))$('#app-more').open=false});
 // Keep only view settings in session storage while the app automatically reloads.
 function preserveAppView(){try{const scroll={...appPageScroll,[activeAppPage]:$('main').scrollTop};sessionStorage.setItem('shanhe-update-view',JSON.stringify({page:activeAppPage,scroll,mode,region,province:$('#province').value,search:$('#search').value,type:$('#type').value,heritageCity,currentPage,pageSize,visitRegion,visitStatus,selectedVisitProvince}))}catch{}}
