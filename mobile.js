@@ -55,7 +55,22 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
 window.addEventListener('online',()=>{checkMobileUpdates(true);queueMobileUpdate()});
 window.addEventListener('pageshow',()=>{checkMobileUpdates();queueMobileUpdate()});
 window.addEventListener('shanhe-records-changed',()=>queueMobileUpdate());
-function fitMobileDialog(){if(window.visualViewport&&Math.abs(window.visualViewport.scale-1)<.05)document.documentElement.style.setProperty('--mobile-dialog-height',window.visualViewport.height+'px')}
-window.visualViewport?.addEventListener('resize',fitMobileDialog);window.addEventListener('resize',fitMobileDialog);fitMobileDialog();
+let mobileKeyboardOpen=false;
+function fitMobileDialog(){
+ const viewport=window.visualViewport;
+ if(!viewport||Math.abs(viewport.scale-1)>=.05)return;
+ const root=document.documentElement;
+ root.style.setProperty('--mobile-dialog-height',viewport.height+'px');
+ const editing=document.activeElement?.matches('textarea,input:not([type]),input[type=text],input[type=search],input[type=email],input[type=url],input[type=tel],input[type=number],input[type=password]');
+ const coveredHeight=Math.max(window.innerHeight,root.clientHeight)-viewport.height;
+ // Keep the navigation slot in the layout until the keyboard finishes closing.
+ mobileKeyboardOpen=(editing||mobileKeyboardOpen)&&coveredHeight>100;
+ root.toggleAttribute('data-mobile-keyboard',mobileKeyboardOpen);
+}
+window.visualViewport?.addEventListener('resize',fitMobileDialog);
+window.addEventListener('resize',fitMobileDialog);
+document.addEventListener('focusin',fitMobileDialog);
+document.addEventListener('focusout',fitMobileDialog);
+fitMobileDialog();
 
 window.addEventListener('shanhe-records-changed',invalidateBackup);document.addEventListener('click',e=>{if(e.target.closest('[data-action]'))invalidateBackup()});

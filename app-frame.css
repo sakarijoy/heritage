@@ -4,3 +4,5 @@
 @media(max-width:850px){header>span{display:none}.page-heading h1{font-size:27px}.page-heading p{font-size:11px}.page-heading{margin-bottom:16px}.app-navigation{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}#provinces .visit-children{grid-template-columns:minmax(0,1fr)}#provinces,.show-provinces #provinces{gap:7px}.province-visit{padding:3px 12px}.province-visit.is-expanded{padding:5px 12px 12px}#provinces .visit-heading .visit-province-name{font-size:15px}.visit-summary{padding:12px}.visit-summary-scope{font-size:12px}.visit-metric{padding:10px 12px}.visit-metric-number strong{font-size:28px}#visit-summary p{font-size:11px}}
 
 .install-actions{flex-wrap:wrap;max-width:45%;justify-content:flex-end}.install-actions button{max-width:100%;min-height:40px;white-space:normal;font-size:11px;line-height:1.5}
+
+@media(max-width:850px){html[data-mobile-keyboard] #app-navigation{visibility:hidden;pointer-events:none}}
