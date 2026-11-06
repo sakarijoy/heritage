@@ -5,9 +5,8 @@
 #travel-close{border:0;padding:6px 0;color:#385d45;min-height:44px}
 #travel-title:focus{outline:none}
 #travel-page .travel-tabs{top:0}
-#travel-page input,#travel-page textarea{min-width:0;max-width:100%;scroll-margin-block:54px 16px}
+#travel-page input,#travel-page textarea{min-width:0;max-width:100%;scroll-margin-block:0}
 @media(max-width:850px){
- body:has(#travel-page :is(input:not([type=file]),textarea):focus){height:var(--mobile-dialog-height,100dvh)}
  #travel-page #travel-heading{padding-inline:0}
  #travel-page .travel-tabs{padding-inline:0}
  #travel-page .travel-panel{padding-inline:0}
