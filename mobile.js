@@ -75,9 +75,14 @@ function fitMobileDialog(){
  const coveredHeight=Math.max(window.innerHeight,root.clientHeight)-viewport.height;
  // Keep the navigation hidden until the keyboard finishes closing.
  mobileKeyboardOpen=(editing||mobileKeyboardOpen)&&coveredHeight>100;
+ if(mobileKeyboardOpen){
+  const visibleBottom=viewport.height+Math.max(0,viewport.offsetTop);
+  root.style.setProperty('--mobile-visible-bottom',visibleBottom+'px');
+ }
  root.toggleAttribute('data-mobile-keyboard',mobileKeyboardOpen);
 }
 window.visualViewport?.addEventListener('resize',fitMobileDialog);
+window.visualViewport?.addEventListener('scroll',fitMobileDialog);
 window.addEventListener('resize',fitMobileDialog);
 document.addEventListener('focusin',fitMobileDialog);
 document.addEventListener('focusout',fitMobileDialog);

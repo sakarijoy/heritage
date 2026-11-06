@@ -5,6 +5,18 @@
 
 .install-actions{flex-wrap:wrap;max-width:45%;justify-content:flex-end}.install-actions button{max-width:100%;min-height:40px;white-space:normal;font-size:11px;line-height:1.5}
 
-@media(max-width:850px){html[data-mobile-keyboard] #app-navigation{display:none}}
+@media (max-width:850px) {
+  html[data-mobile-keyboard] body {
+    /* Keep the scroll pane painted beneath the translucent keyboard toolbar. */
+    --keyboard-toolbar-overlap:72px;
+    height:calc(100dvh + var(--keyboard-toolbar-overlap));
+  }
+  html[data-mobile-keyboard] body>main {
+    --keyboard-scroll-inset:max(16px, calc(100dvh + var(--keyboard-toolbar-overlap) - var(--mobile-visible-bottom) + 16px));
+    padding-bottom:var(--keyboard-scroll-inset);
+    scroll-padding-bottom:var(--keyboard-scroll-inset);
+  }
+  html[data-mobile-keyboard] #app-navigation {display:none}
+}
 
 [data-unsaved]{outline:2px solid #a86620!important;outline-offset:3px;scroll-margin-block:16px}
