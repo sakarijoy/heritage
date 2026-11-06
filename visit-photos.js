@@ -7,8 +7,7 @@ $('.visit-editor-tabs').onkeydown=e=>{if(!['ArrowLeft','ArrowRight'].includes(e.
 function clearVisitPhotoSelection(){visitPhotoPreviewURLs.forEach(URL.revokeObjectURL);visitPhotoPreviewURLs=[];visitPhotoSelection=[];$('#visit-photo-previews').innerHTML='';$('#visit-photo-caption').value='';$('#visit-photo-files').value='';$('#visit-photo-form').hidden=true;$('#visit-photo-add').disabled=visitPhotosBusy}
 function hasPendingVisitPhotos(){return visitPhotoSelection.length>0||visitPhotosBusy||($('#visit-photo-viewer').open&&$('#visit-photo-edit-caption').value!==(visitPhotoViewing?.caption||''))}
 function canCloseVisitAlbum(){if(visitPhotosBusy){toast('正在保存照片，请稍候');return false}if(visitPhotoSelection.length){switchVisitEditorTab('album');toast('请先保存所选照片，或点击“取消选择”');return false}return true}
-$('#visit-dialog').addEventListener('cancel',e=>{if(!canCloseVisitAlbum())e.preventDefault()});
-function setVisitPhotosBusy(busy){visitPhotosBusy=busy;document.querySelectorAll('#visit-dialog button,#visit-dialog input,#visit-dialog textarea,#visit-photo-viewer button,#visit-photo-viewer textarea').forEach(node=>node.disabled=busy);$('#visit-photo-add').disabled=busy||visitPhotoSelection.length>0}
+function setVisitPhotosBusy(busy){visitPhotosBusy=busy;document.querySelectorAll('#visit-detail-page button,#visit-detail-page input,#visit-detail-page textarea,#visit-photo-viewer button,#visit-photo-viewer textarea').forEach(node=>node.disabled=busy);$('#visit-photo-add').disabled=busy||visitPhotoSelection.length>0}
 function initVisitAlbum(place,tab){visitPhotoPlace=place;visitAlbumRows=[];visitPhotoViewing=null;clearVisitPhotoSelection();$('#visit-photo-gallery').innerHTML='';$('#visit-album-count').textContent=visitPhotoCounts.get(place)||0;switchVisitEditorTab(tab);loadVisitAlbum()}
 function renderVisitAlbum(){
  $('#visit-album-count').textContent=visitAlbumRows.length;
@@ -20,7 +19,7 @@ async function loadVisitAlbum(){
  try{const rows=await MobileStore.getVisitPhotos(place);if(place!==visitPhotoPlace||version!==visitAlbumLoad)return;visitAlbumRows=rows;renderVisitAlbum();$('#visit-photo-status').textContent=rows.length?'共 '+rows.length+' 张 · 点击照片可放大、修改说明或删除':''}
  catch(error){if(place!==visitPhotoPlace||version!==visitAlbumLoad)return;$('#visit-photo-status').textContent='读取失败：'+error.message;$('#visit-photo-retry').hidden=false}
 }
-async function refreshVisitAlbums(){const counts=await MobileStore.getVisitPhotoCounts();visitPhotoCounts.clear();for(const [key,count] of Object.entries(counts))visitPhotoCounts.set(key,count);renderVisits();if($('#visit-dialog').open&&visitPhotoPlace)await loadVisitAlbum()}
+async function refreshVisitAlbums(){const counts=await MobileStore.getVisitPhotoCounts();visitPhotoCounts.clear();for(const [key,count] of Object.entries(counts))visitPhotoCounts.set(key,count);renderVisits();if(!$('#visit-detail-page').hidden&&visitPhotoPlace)await loadVisitAlbum()}
 async function refreshVisitAlbumsAfterSave(){try{await refreshVisitAlbums()}catch(error){$('#visit-photo-status').textContent='照片已保存，但列表读取失败：'+error.message;$('#visit-photo-retry').hidden=false}}
 $('#visit-photo-retry').onclick=()=>refreshVisitAlbums().catch(error=>{$('#visit-photo-status').textContent='读取失败：'+error.message});
 $('#visit-photo-add').onclick=()=>{if(!visitPhotosBusy&&!visitPhotoSelection.length)$('#visit-photo-files').click()};
