@@ -31,11 +31,6 @@ function selectHeritageMode(next,fromOverview=false){
   syncRegionButtons();
  }
  render();
- if(fromOverview){
-  const tab=$('#heritage-modes [data-mode="'+mode+'"]');
-  tab.focus({preventScroll:true});
-  tab.scrollIntoView({block:'start'});
- }
 }
 $('#heritage-modes').onclick=e=>selectHeritageMode(e.target.closest('[data-mode]')?.dataset.mode);
 $('#stats').onclick=e=>selectHeritageMode(e.target.closest('[data-overview-mode]')?.dataset.overviewMode,true);
