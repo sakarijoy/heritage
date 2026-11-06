@@ -8,6 +8,9 @@ function showAppPage(page,{top=false}={}){
   if(visitEditorDirty()){toast('请先保存到访日期与备注');return false}
   $('#visit-detail-page').hidden=true;
   visitEditorKey=null;
+ }else if(typeof isTravelPageOpen==='function'&&isTravelPageOpen()){
+  $('#travel-page').hidden=true;
+  if(location.hash.startsWith('#site='))history.replaceState(null,'',location.pathname+location.search);
  }else appPageScroll[activeAppPage]=content.scrollTop;
  activeAppPage=page;
  for(const name of ['visits','heritage'])$('#'+name+'-page').hidden=name!==page;
@@ -130,4 +133,4 @@ function restoreAppView(){try{
 }catch{}}
 // Heritage exploration is the default home page; automatic updates restore the view.
 showAppPage('heritage',{top:true});restoreAppView();
-window.addEventListener('hashchange',()=>{if(location.hash.startsWith('#site=')&&activeAppPage!=='heritage')showAppPage('heritage',{top:true})});
+if(typeof readTravelHash==='function')readTravelHash();

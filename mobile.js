@@ -15,7 +15,7 @@ function mobileUpdateBlocked(){
  const journalText=$('#journal-title-input').value.trim()||$('#journal-body-input').value.trim();
  const journalDirty=journalText&&$('#draft-status').textContent!=='游记已保存到本机';
  const focus=document.activeElement,editing=focus&&(focus.matches('input:not([type=checkbox]):not([type=button]):not([type=submit]),textarea,select')||focus.isContentEditable);
- return mobileComposing||mobileRestoreBusy||mobileBackupButton.disabled||preparedBackup||document.querySelector('form button:disabled')||(typeof coverSaving!=='undefined'&&coverSaving)||(typeof visitPhotosBusy!=='undefined'&&visitPhotosBusy)||(typeof isVisitEditorOpen==='function'&&isVisitEditorOpen())||$('#comment-body').value.trim()||$('#travel-files').files.length||journalDirty||document.querySelector('dialog[open]')||$('#app-more').open||(editing&&Date.now()-mobileLastActivity<10000);
+ return mobileComposing||mobileRestoreBusy||mobileBackupButton.disabled||preparedBackup||document.querySelector('form button:disabled')||(typeof coverSaving!=='undefined'&&coverSaving)||(typeof visitPhotosBusy!=='undefined'&&visitPhotosBusy)||(typeof isVisitEditorOpen==='function'&&isVisitEditorOpen())||(typeof isTravelPageOpen==='function'&&isTravelPageOpen())||$('#comment-body').value.trim()||$('#travel-files').files.length||journalDirty||document.querySelector('dialog[open]')||$('#app-more').open||(editing&&Date.now()-mobileLastActivity<10000);
 }
 function queueMobileUpdate(delay=1800){if(mobileUpdateTimer!==null)clearTimeout(mobileUpdateTimer);mobileUpdateTimer=setTimeout(()=>{mobileUpdateTimer=null;tryMobileUpdate()},delay)}
 function tryMobileUpdate(manual=false){
