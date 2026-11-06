@@ -8,7 +8,7 @@ let mode='all',region='全部';const regions={华中:['河南','湖北','湖南'
 const provinces=[...new Set(Object.values(regions).flat())];
 const coverPhotos=new Map();let coverReady=false,coverSaving=false,photoCoverSite=null;
 function displayPhoto(id){return coverPhotos.get(id)||PHOTOS[id]}
-function coverTools(id){const custom=coverPhotos.has(id),disabled=!coverReady||coverSaving?' disabled':'';return `<div class="cover-tools"><button type="button" data-cover-upload="${esc(id)}" aria-label="${custom?'更换':'上传替换'}${esc(DATA.items.find(x=>x.id===id)?.name||'景点')}展示图"${disabled}>${custom?'更换照片':'上传替换'}</button>${custom?`<button type="button" data-cover-reset="${esc(id)}"${disabled}>恢复默认图</button>`:''}<span>仅本机可见</span></div>`}
+function coverTools(id){const custom=coverPhotos.has(id),disabled=!coverReady||coverSaving?' disabled':'';return `<div class="cover-tools"><button type="button" data-cover-upload="${esc(id)}" aria-label="${custom?'更换':'上传替换'}${esc(DATA.items.find(x=>x.id===id)?.name||'景点')}展示图"${disabled}>${custom?'更换照片':'上传替换'}</button><span>仅本机可见</span></div>`}
 function save(){migrateLegacy();try{localStorage.setItem('shanhe-v1',JSON.stringify(state))}catch{toast('浏览器存储不可用，请导出记录');render();return false}render();return true}
 function toast(t){const node=$('#toast');(document.querySelector('dialog[open]')||document.body).appendChild(node);$('#toast').textContent=t;$('#toast').style.display='block';setTimeout(()=>$('#toast').style.display='none',2600)}
 function syncProvinceOptions(){const select=$('#province'),selected=select.value,options=region==='全部'?provinces:regions[region];select.innerHTML='<option value="">全部省份</option>'+options.map(p=>`<option value="${p}">${p}</option>`).join('');select.value=options.includes(selected)?selected:''}
