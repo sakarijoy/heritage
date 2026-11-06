@@ -5,6 +5,6 @@
 
 .install-actions{flex-wrap:wrap;max-width:45%;justify-content:flex-end}.install-actions button{max-width:100%;min-height:40px;white-space:normal;font-size:11px;line-height:1.5}
 
-@media(max-width:850px){html[data-mobile-keyboard] #app-navigation{visibility:hidden;pointer-events:none}}
+@media(max-width:850px){html[data-mobile-keyboard] #app-navigation{display:none}}
 
 [data-unsaved]{outline:2px solid #a86620!important;outline-offset:3px;scroll-margin-block:16px}
